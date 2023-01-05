@@ -1,0 +1,286 @@
+#include <cstring>
+#include <iostream>
+#include<vector>
+#include<fstream>
+
+using namespace std;
+
+class Academic_Student { //This class stores the academic
+  int DOB;               // details of student
+  string Name, Class, Div;
+  long int telenumber;
+  static int count;
+  int Marks, Marks1, Marks2;
+public:
+  int Rollnumber;
+  Academic_Student() { count++; }
+  void read() {
+    cout << "\nEnter the Student's name:-" << endl;
+    cin >> Name;
+    cout << "Enter the Student's roll number:-" << endl;
+    cin >> Rollnumber;
+    cout << "Enter the Student's Date of Birth in format of(DDMMYY):-" << endl;
+    cin >> DOB;
+    cout << "Enter the Student's Class:-" << endl;
+    cin >> Class;
+    cout << "Enter the Student's Division:-" << endl;
+    cin >> Div;
+    cout << "Enter marks in 12th Standard:-" << endl;
+    cin >> Marks;
+    cout << "Enter marks obtained in competitive exam(CET/JEE):-" << endl;
+    cin >> Marks1;
+    cout << "Enter marks obtained in 10th Standard:-" << endl;
+    cin >> Marks2;
+    cout << "Enter the student's telephone number:-" << endl;
+    cin >> telenumber;
+  }
+  void display() {
+    cout << "Student's name is:-" << Name << endl;
+    cout << "Roll number of student is:-" << Rollnumber << endl;
+    cout << "Student's Class is:-" << Class << endl;
+    cout << "Student's division is:-" << Div << endl;
+    cout << "Telephone number of student is:-" << telenumber << endl;
+    cout << " Marks in 12th Standard:-" << Marks << endl;
+    cout << " Marks obtained in competitive exam(CET/JEE):-" << Marks1 << endl;
+    cout << " Marks obtained in 10th Standard:-" << Marks2 << endl;
+  }
+  ~Academic_Student() { count--; }
+  static void display1() {
+    cout << "Total number of students whose data is entered:-" << count << endl;
+  }
+};
+class Personal_Student : public Academic_Student {
+  string father, mother, sibling, Bloodgroup;
+//This class stores the family and personal details of student
+public:
+  void read() {
+    cout << "Enter the Student's Bloodgroup:-" << endl;
+    cin >> Bloodgroup;
+    cout << "Enter the name of your father:-" << endl;
+    cin >> father;
+    cout << "Enter the name of your mother:-" << endl;
+    cin >> mother;
+    cout << "Enter the name of your siblings(if any):-" << endl;
+    cin >> sibling;
+  }
+  void display() {
+    cout << "Blood group of student is:-" << Bloodgroup << endl;
+    cout << "Enter the name of your father:-" << father << endl;
+    cout << "Enter the name of your mother:-" << mother << endl;
+    cout << "Enter the name of your sibling:-" << sibling << endl;
+  }
+};
+class Achievement : public Personal_Student {
+  int prize_num, prize_num1, prize_num2;
+//This class stores the number of prizes won in extra-curricular activities by the student
+public:
+  void read() {
+    cout << "Enter the number of prizes won by student in any sport:-" << endl;
+    cin >> prize_num;
+    cout << "Enter the number of prizes won by student in any academic event:-"
+         << endl;
+    cin >> prize_num1;
+    cout
+        << "Enter the number of prizes won by student in organizing any event:-"
+        << endl;
+    cin >> prize_num2;
+  }
+  void display() {
+    cout << " number of prizes won by student in any sport:-" << prize_num
+         << endl;
+    cout << " number of prizes won by student in any sport:-" << prize_num1
+         << endl;
+    cout << " number of prizes won by student in any sport:-" << prize_num2
+         << endl;
+  }
+  friend void search();
+};
+
+void search(int key ,int n , Achievement obj[]) 
+{
+  //This search function displays all academic,personal and achievement details by finding the name of student
+  int flag=0,i;
+  for (i = 0; i < n; i++) {
+    if (key == obj[i].Rollnumber) 
+    {
+      flag=1;
+      obj[i].Academic_Student::display();
+      obj[i].Personal_Student::display();
+      obj[i].display();
+    }
+  }
+
+}
+class result {
+  //This class stores the marks obtained by a student in a particular subject
+public:
+  int m1, m2, m3, m4, m5, m6;
+  void read() {
+    cout << "Enter Subject 1 Mark :-" << endl;
+    cin >> m1;
+    cout << "Enter Subject 2 Mark :-" << endl;
+    cin >> m2;
+    cout << "Enter Subject 3 Mark :-" << endl;
+    cin >> m3;
+    cout << "Enter Subject 4 Mark :-" << endl;
+    cin >> m4;
+    cout << "Enter Subject 5 Mark :-" << endl;
+    cin >> m5;
+    cout << "Enter Subject 6 Mark :-" << endl;
+    cin >> m6;
+  }
+  virtual void display() = 0;
+};
+class total_marks : public result {  
+public:
+  void read() { result::read(); }
+  void display() {
+    int x;
+    x = m1 + m2 + m3 + m4 + m5 + m6;
+    cout << "Total Marks : " << x << "/600" << endl;
+  }
+};
+class Percentage : public result {
+public:
+  void read() { result::read(); }
+  void display() {
+    int x;
+    x = (m1 + m2 + m3 + m4 + m5 + m6) / 6;
+    cout << "Total Percentage : " << x << "%" << endl;
+  }
+};
+int Academic_Student::count = 0;
+ void writerecord() { 
+  Achievement obj;
+  obj.read();
+  ofstream fout;
+  fout.open("filename",ios::out| ios::binary | ios::app);
+  fout.write((char *)&obj, sizeof(obj));
+  fout.close();
+}
+void displayrecord() {
+  Achievement obj;
+  ifstream fin;
+  fin.open("filename", ios::binary);
+  while ((fin.read((char *)&obj, sizeof(obj)))) {
+    obj.display();
+  }
+  fin.close();
+}
+void deleteExistingFile()
+{
+  remove("filename");
+}
+
+int main() {
+  int n, ch;
+  deleteExistingFile();
+  cout << "*******STUDENT MANAGEMENT SYSTEM*******" << endl;
+  cout << "Enter number of students:-" << endl;
+  cin >> n;
+  Achievement obj[n];
+  result *ptr;
+  Percentage p;
+  total_marks t;
+  do {
+    cout << "1.Read" << endl;
+    cout << "2.Display" << endl;
+    cout << "3.Search" << endl;
+    cout << "4.Display count" << endl;
+    cout << "5.Display total marks" << endl;
+     cout <<"6.Display Percentage" << endl;
+     cout<<"7.Login Page"<<endl;
+    cout<<"8.Export Data to file"<<endl;
+    cout << "Enter Your Choice:- " << endl;
+    cin >> ch;
+    switch (ch) 
+    {
+    case 1:
+      for (int i = 0; i < n; i++) {
+        obj[i].Academic_Student::read();
+        obj[i].Personal_Student::read();
+        obj[i].read();
+      }
+      break;
+    case 2:
+      for (int i = 0; i < n; i++) {
+        obj[i].Academic_Student::display();
+        obj[i].Personal_Student::display();
+        obj[i].display();
+      }
+      break;
+    case 3:
+      int key;
+      cout << "Enter Roll No. to Search : ";
+      cin >> key;
+      search(key,n,obj);
+      break;
+    case 4:
+      Academic_Student::display1();
+      break;
+    case 5:
+      ptr = &t;
+      ptr->read();
+      ptr->display();
+      break;
+        
+    case 6:
+      ptr = &p;
+      ptr->read();
+      ptr->display();
+      break;
+      case 7:
+      char uname[50];
+     char pass[50];
+     cout<<"\n Enter User Name  :  ";
+     cin>>uname;
+     cout<<"\n Enter Password   :  ";
+     cin>>pass;
+     try
+     {
+          //This section is used to verify the number of characters.
+          if(strlen(pass)<6)
+          {
+               cout<<"\n Password must be at least 6 Characters Long..."<<endl;
+               throw 'c';
+          }
+          //This section is used to verify the digits in the string.
+          bool digit_yes=false;
+          bool valid;
+          int len = strlen(pass);
+          for (int count = 0; count < len; count++)
+          if (isdigit(pass[count]))      
+               digit_yes=true;
+          if (!digit_yes)
+          {
+               valid=false;
+               cout <<"\n Password must have at least One Digit (0-9)"<< endl;
+               throw 'c';
+          }
+          else
+          {
+               valid=true;
+               cout<<"\n Password is Correct";
+          }
+     }
+     catch(char c)
+     {
+          cout<<"\n Invalid Password Format!!!";
+     }
+     catch(...)
+     {
+          cout<<"\n Default Exception";
+     }
+     break;
+        case 8:
+        writerecord();
+          displayrecord();
+      break;
+    default:
+      cout << "Invalid choice" << endl;
+      break;
+    }
+  } while (1);
+  return 0;
+}
+   

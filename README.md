@@ -11,3 +11,24 @@ and searching of a particular student record among millions of student records.
 
 # This is primarily made for users who want to improve their knowledge on Object-Oriented Programming in C++
 
+```
+git clone https://github.com/Amoghchandragiri/Elite-Sports-Center.git
+```
+
+- Create a branch
+
+``` 
+git checkout -b "<your_branch_name>"
+```
+
+- Make your changes
+- Commit and push
+
+```
+git add .
+git commit -m 'Commit message'
+git push origin <your_branch_name>
+```
+- Create a new pull request from your forked repository (Click the New Pull Request button located at the top of your repo)
+- Wait for your PR review and merge approval
+

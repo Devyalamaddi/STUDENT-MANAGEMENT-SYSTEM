@@ -12,7 +12,7 @@ and searching of a particular student record among millions of student records.
 # This is primarily made for users who want to improve their knowledge on Object-Oriented Programming in C++
 
 ```
-git clone https://github.com/Amoghchandragiri/Elite-Sports-Center.git
+https://github.com/Amoghchandragiri/STUDENT-MANAGEMENT-SYSTEM.git
 ```
 
 - Create a branch
